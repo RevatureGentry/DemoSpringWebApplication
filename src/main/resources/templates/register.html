@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Demo Web App - Registration</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<meta name="_csrf" id="_csrf" th:content="${_csrf.token}"/>
+ 	<meta name="_csrf_header" id="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+	<div class="container mt-4">
+		<form th:action="@{/register}" th:method="post" th:object="${registrationForm}">
+			<div class="card">
+				<div class="card-title">
+					<div class="card-header display-4">Registration</div>
+				</div>
+				<div class="card-body">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="username">Username</label>
+							<input type="text" name="username" class="form-control" th:value="${registrationForm.username}">
+							<div th:if="${#fields.hasErrors('username')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('username')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="password">Password</label>
+							<input type="password" name="password" class="form-control" th:value="${registrationForm.password}">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="passwordAgain">Verify Password</label>
+							<input type="password" name="passwordAgain" class="form-control" th:value="${registrationForm.passwordAgain}">
+						</div>
+						<div th:if="${#fields.hasErrors('password')}">
+							<ul>
+								<li class="text-danger" th:each="err : ${#fields.errors('password')}" th:text="${err}">
+							</ul>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="firstname">First Name</label>
+							<input type="text" name="firstname" th:value="${registrationForm.firstname}" class="form-control">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="lastname">Last Name</label>
+							<input type="text" name="lastname" th:value="${registrationForm.lastname}" class="form-control">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-5">
+							<label for="email">Email</label>
+							<input type="text" name="email" class="form-control" th:value="${registrationForm.email}">
+							<div th:if="${#fields.hasErrors('email')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('email')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="phoneNumber">Phone Number</label>
+							<input type="text" name="phoneNumber" class="form-control" th:value="${registrationForm.phoneNumber}">
+							<div th:if="${#fields.hasErrors('phoneNumber')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+						<div class="form-group col-md-3">
+							<label for="phoneType">Phone Type</label>
+							<select name="phoneType" class="form-control">
+								<option th:each="phoneType : ${T(com.revature.model.PhoneType).values()}"
+								        th:value="${{phoneType}}"
+								        th:text="${phoneType}">
+								 </option>
+							</select>
+							<div th:if="${#fields.hasErrors('phoneType')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('phoneType')}" th:text="${err}">
+								</ul>
+							</div>
+						</div> 
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="street">Street Address</label>
+							<input type="text" name="street" class="form-control" th:value="${registrationForm.street}">
+							<div th:if="${#fields.hasErrors('street')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('street')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="city">City</label>
+							<input type="text" name="city" class="form-control" th:value="${registrationForm.city}">
+							<div th:if="${#fields.hasErrors('city')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('city')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+						<div class="form-group col-md-2">
+							<label for="state">State</label>
+							<select name="state" class="form-control">
+								<option th:each="state : ${T(com.revature.model.State).values()}"
+							 		th:value="${{state}}"
+							 		th:text="${state}">
+								</option>
+							</select>
+							<div th:if="${#fields.hasErrors('state')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('state')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+						<div class="form-group col-md-2">
+							<label for="zipCode">Zip Code</label>
+							<input type="text" name="zipCode" class="form-control" th:value="${registrationForm.zipCode}">
+							<div th:if="${#fields.hasErrors('zipCode')}">
+								<ul>
+									<li class="text-danger" th:each="err : ${#fields.errors('zipCode')}" th:text="${err}">
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-row justify-content-between">
+						<button type="submit" class="btn btn-outline-success">Register</button>
+						<a th:href="@{/login}" class="btn btn-outline-info">Back to Login</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

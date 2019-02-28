@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Demo Web App</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<meta name="_csrf" id="_csrf" th:content="${_csrf.token}"/>
+ 	<meta name="_csrf_header" id="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+	<!-- Navbar -->
+	<div class="container-fluid">
+		<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+			<a class="navbar-brand text-light" th:href="@{/todos}">Demo App</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link text-light btn btn-primary" th:href="@{/todos/create}">Create Todo</a></li>
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item"><a th:href="@{/info}" class="btn btn-primary text-light nav-link">User Information</a></li>
+					<li class="nav-item"><form th:action="@{/logout}" method="POST"><input type="submit" class="btn btn-primary text-light nav-link" value="Sign Out"></form></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	
+	<!-- Jumbotron -->
+	<div class="container">
+		<div class="jumbotron mt-2">
+			<h1 class="display-5">Welcome, <span th:text="${currentUser}"></span>!</h1>
+		</div>
+	</div>
+	
+	<!-- Update Success Message -->
+	<div class="container">
+		<div th:if="${updateMessage != null}" class="alert alert-success">
+			<span th:text="${updateMessage}"></span>
+		</div>
+	</div>
+	
+	<!-- Todos Table -->
+	<div class="container mt-4">
+		<table class="table table-bordered table-hover">
+			<thead class="thead-dark">
+				<tr>
+					<th>ID</th>
+					<th>Title</th>
+					<th>Body</th>
+					<th>Completed?</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="todo : ${todos}">
+					<td th:text="${todo.id}"></td>
+					<td th:text="${todo.title}"></td>
+					<td th:text="${todo.body}"></td>
+					<td th:text="${todo.completed ? 'Yes' : 'No'}"></td>
+					<td th:attr="id=${todo.id}" class="d-flex flex-row justify-content-around mb-0 mt-0">
+						<form th:action="@{/todos}" th:method="PUT">
+							<button type="submit" class="btn btn-sm btn-outline-warning" th:attr="value=${todo.id}" th:disabled="${todo.completed}" name="completedTodo">Mark Completed</button>
+						</form>
+						<form th:action="@{/todos}" th:method="DELETE">
+							<button type="submit" class="btn btn-sm btn-outline-danger" th:attr="value=${todo.id}" name="deletedTodo">Delete Todo</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
