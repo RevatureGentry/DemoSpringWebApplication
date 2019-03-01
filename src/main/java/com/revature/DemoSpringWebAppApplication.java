@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.revature.model.AppUser;
@@ -19,7 +20,7 @@ import com.revature.repository.UserInfoRepository;
 import com.revature.repository.UserRepository;
 
 @SpringBootApplication
-public class DemoSpringWebAppApplication {
+public class DemoSpringWebAppApplication extends SpringBootServletInitializer {
 	
 	@Autowired
 	private UserRepository userRepo;
