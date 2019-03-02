@@ -9,7 +9,7 @@ public interface TodoService {
 
 	List<Todo> getAllTodos(Principal principal);
 	Todo createTodo(Todo todo, Principal principal);
-	String deleteTodo(int id);
-	String completeTodo(int id);
+	String deleteTodo(int id, Principal principal);
+	String completeTodo(int id, Principal principal);
 	String completeTodos(List<Integer> todoIds);
 }

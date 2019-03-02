@@ -14,17 +14,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.revature.model.Todo;
 import com.revature.service.TodoService;
+import com.revature.service.WelcomeMessageService;
 
 @Controller
 public class TodoController {
 	
 	@Autowired
 	private TodoService todoService;
+	
+	@Autowired
+	private WelcomeMessageService welcomeMessageService;
+	
 
 	@GetMapping(value="/todos")
 	public String loadHomePage(Principal principal, Model model) {
 		model.addAttribute("currentUser", principal.getName());
 		model.addAttribute("todos", todoService.getAllTodos(principal));
+		model.addAttribute("welcomeMessage", welcomeMessageService.getWelcomeMessage());
 		return "home";
 	}
 	
@@ -47,7 +53,7 @@ public class TodoController {
 	
 	@PutMapping(value="/todos", consumes="application/x-www-form-urlencoded;charset=UTF-8")
 	public String updateTodos(@RequestParam("completedTodo") Integer todoId, Model model, Principal principal) {
-		final String message = todoService.completeTodo(todoId);
+		final String message = todoService.completeTodo(todoId, principal);
 		model.addAttribute("updateMessage", message);
 		model.addAttribute("currentUser", principal.getName());
 		model.addAttribute("todos", todoService.getAllTodos(principal));
@@ -56,7 +62,7 @@ public class TodoController {
 	
 	@DeleteMapping(value="/todos", consumes="application/x-www-form-urlencoded;charset=UTF-8")
 	public String deleteTodo(@RequestParam("deletedTodo") int id, Principal principal, Model model) {
-		final String message = todoService.deleteTodo(id);
+		final String message = todoService.deleteTodo(id, principal);
 		model.addAttribute("updateMessage", message);
 		model.addAttribute("currentUser", principal.getName());
 		model.addAttribute("todos", todoService.getAllTodos(principal));

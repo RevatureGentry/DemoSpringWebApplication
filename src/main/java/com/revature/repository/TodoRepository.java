@@ -13,9 +13,6 @@ import com.revature.model.Todo;
 @Transactional
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
 
-	@Transactional(readOnly=true)
 	List<Todo> findAllTodosByUser(AppUser user);
-	
-	@Transactional(readOnly=true)
 	List<Todo> findAllTodosByUserOrderByIdDesc(AppUser user);
 }

@@ -1,4 +1,17 @@
-## Demo Spring Web Application for Performance Testing
+# Demo Spring Web Application for Performance Testing
+## How to use
+* Clone the project
+    ```bash
+        git clone https://github.com/RevatureGentry/DemoSpringWebApplication.git
+    ```
+* Inside the cloned directory, build the project using Maven
+    ```bash
+        mvn clean package 
+    ```
+* Run the Application, providing any JVM arguments as such
+    ```bash
+        java <JVM ARGS HERE> -jar target/DemoSpringWebApp.war
+    ```
 ## Endpoints
 
 | Method | URL | Description |
@@ -9,6 +22,7 @@
 | GET | /register | Shows the Registration Page |
 | GET | /todos | The authenticated home page, show table of all todos |
 | GET | /todos/create | Shows the Create Todo Form |
+| GET | /enable-dark-mode | Enables Dark Mode feature |
 | POST | /process | Attempts authentication from form values |
 | POST | /register | Attemps registration from form values |
 | POST | /todos | Creates todo from Create Todo Form |
