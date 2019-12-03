@@ -27,7 +27,7 @@
         </encoder>
     </appender>
     <root level="info">
-        <appender-ref ref="STASH" />
+<!--        <appender-ref ref="STASH" />-->
         <appender-ref ref="STDOUT" />
         <appender-ref ref="rollingFileAppender" />
     </root>
