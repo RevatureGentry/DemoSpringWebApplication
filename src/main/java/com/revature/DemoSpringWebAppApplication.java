@@ -44,9 +44,6 @@ public class DemoSpringWebAppApplication extends SpringBootServletInitializer {
 		adminAuthority.add(new ApplicationAuthority("ROLE_USER"));
 
 		// Bootstrap Users
-		/*
-		 * William
-		 */
 		AppUser user = new AppUser();
 		user.setUsername("admin");
 		user.setPassword(encoder.encode("Password123!"));

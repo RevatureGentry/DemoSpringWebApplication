@@ -1,9 +1,7 @@
 package com.revature.service;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
@@ -13,6 +11,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.revature.model.TodoKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +22,35 @@ import com.revature.model.Todo;
 import com.revature.repository.TodoRepository;
 import com.revature.repository.UserRepository;
 import com.revature.service.exception.TodoNotFoundException;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TodoServiceImpl implements TodoService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TodoServiceImpl.class);
+
+	private static final int THREAD_POOL_SIZE = 5;
 	
 	@Autowired
 	private TodoRepository repo;
-	
+
 	@Autowired
 	private UserRepository userRepo;
 	
 	protected ThreadLocal<AtomicInteger> counter = ThreadLocal.withInitial(() -> new AtomicInteger(1));
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public List<Todo> getAllTodos(Principal principal) {
-		return getTodosByUserAsync(repo.findAll(), principal);
+		Map<TodoKey, Todo> todos = new TreeMap<>();
+		for (Todo todo : getTodosByUserAsync(repo.findAll(), principal)) {
+			todos.put(new TodoKey(new Long(todo.getId())), todo);
+		}
+		return new ArrayList<>(todos.values());
 	}
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public Todo createTodo(Todo todo, Principal principal) {
 		AppUser user = userRepo.getOne(principal.getName());
@@ -50,13 +59,17 @@ public class TodoServiceImpl implements TodoService {
 		return repo.save(todo);
 	}
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public String deleteTodo(int id, Principal principal) {
-		List<Todo> todos = new CopyOnWriteArrayList<>(getTodosByUserAsync(repo.findAll(), principal));
+		Map<TodoKey, Todo> todos = new TreeMap<>();
+		for (Todo todo : repo.findAll()) {
+			todos.put(new TodoKey(new Long(todo.getId())), todo);
+		}
 		try {
-			for (Todo todo : todos) {
-				if (todo.getId() == id)
-					repo.delete(todo);
+			for (TodoKey todo : todos.keySet()) {
+				if (todo.getKey() == id)
+					repo.delete(todos.get(todo));
 			}
 			return "Todo successfully removed";
 		} catch (IllegalArgumentException e) {
@@ -65,6 +78,7 @@ public class TodoServiceImpl implements TodoService {
 		}
 	}
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public String completeTodo(int id, Principal principal) {
 		List<Todo> todos = getTodosByUserAsync(repo.findAll(), principal);
@@ -76,6 +90,7 @@ public class TodoServiceImpl implements TodoService {
 		return "Todo completed!";
 	}
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public String completeTodos(List<Integer> todoIds) {
 		List<Todo> todos = repo.findAll();
@@ -92,7 +107,10 @@ public class TodoServiceImpl implements TodoService {
 			todo.setCompleted(true);
 		}
 		
-		repo.saveAll(completedTodos);
+		completedTodos.forEach(todo -> {
+			repo.save(todo);
+			repo.flush();
+		});
 		
 		return completedTodos.size() + " updated successfully!";
 	}
@@ -102,7 +120,7 @@ public class TodoServiceImpl implements TodoService {
 		ExecutorService service = null;
 		try {
 			do {
-				service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+				service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * THREAD_POOL_SIZE);
 				
 				Future<Todo> future = service.submit(new FetchCurrentUserTodoTask(this, currentUserTodos, principal));
 				currentUserTodos.remove(future.get());
@@ -117,7 +135,7 @@ public class TodoServiceImpl implements TodoService {
 			service.shutdown();
 		}
 		
-		Collections.sort(currentUserTodos, (t1, t2) -> t1.getId() - t1.getId());
+		Collections.sort(currentUserTodos, Comparator.comparingInt(Todo::getId));
 		return currentUserTodos.parallelStream().filter(todo -> todo.getUser().getUsername().equals(principal.getName())).collect(Collectors.toList());
 	}
 	
@@ -129,7 +147,7 @@ public class TodoServiceImpl implements TodoService {
 		return true;
 	}
 
-	private class FetchCurrentUserTodoTask implements Callable<Todo> {
+	private static class FetchCurrentUserTodoTask implements Callable<Todo> {
 
 		private final TodoServiceImpl todoService;
 		private List<Todo> todos;

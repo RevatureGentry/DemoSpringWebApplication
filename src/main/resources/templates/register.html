@@ -17,7 +17,7 @@
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label for="username">Username</label>
-							<input type="text" name="username" class="form-control" th:value="${registrationForm.username}">
+							<input type="text" id="username" name="username" class="form-control" th:value="${registrationForm.username}">
 							<div th:if="${#fields.hasErrors('username')}">
 								<ul>
 									<li class="text-danger" th:each="err : ${#fields.errors('username')}" th:text="${err}">

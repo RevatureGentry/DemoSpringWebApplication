@@ -1,17 +1,16 @@
 package com.revature.service;
 
-import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.revature.model.AppUser;
 import com.revature.model.ApplicationAuthority;
 import com.revature.model.RegistrationForm;
 import com.revature.model.UserInformation;
 import com.revature.repository.UserInfoRepository;
 import com.revature.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -26,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 		this.infoRepo = infoRepo;
 		this.passwordEncoder = passwordEncoder;
 	}
-	
+
 	@Override
 	public AppUser attemptRegisterUser(RegistrationForm form) {
 		AppUser user = new AppUser();

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.revature.model.AppUser;
 import com.revature.repository.UserRepository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private final UserRepository repo;
@@ -20,6 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		this.repo = repo;
 	}
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<AppUser> user = repo.findById(username);

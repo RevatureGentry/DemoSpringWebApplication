@@ -18,7 +18,7 @@ public class UserInformation {
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 
 	@Column(name = "firstname")
 	private String firstname;
@@ -53,7 +53,7 @@ public class UserInformation {
 	@JoinColumn(name = "username")
 	private AppUser user;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
