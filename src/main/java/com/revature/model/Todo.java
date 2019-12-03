@@ -20,7 +20,7 @@ public class Todo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
-	private int id;
+	private Integer id;
 
 	@Column(name = "title")
 	private String title;
@@ -50,7 +50,7 @@ public class Todo {
 		this.user = user;
 	}
 
-	public Todo(int id, String title, String body, boolean completed) {
+	public Todo(Integer id, String title, String body, boolean completed) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -58,7 +58,7 @@ public class Todo {
 		this.completed = completed;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 

@@ -8,6 +8,8 @@ import com.revature.model.AppUser;
 import com.revature.model.UserInformation;
 import com.revature.repository.UserInfoRepository;
 import com.revature.repository.UserRepository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -19,12 +21,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 		this.repo = repo;
 		this.userRepo = userRepo;
 	}
-	
+
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public UserInformation getUserInformation(Principal principal) {
 		return repo.findUserInformationByUser(new AppUser(principal.getName()));
 	}
 
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public UserInformation updateUserInformation(UserInformation info, Principal principal) {
 		AppUser user = userRepo.getOne(principal.getName());

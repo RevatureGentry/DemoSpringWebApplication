@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class WelcomeMessageServiceImpl implements WelcomeMessageService {
 
-	private static final List<BufferedReader> readers = new ArrayList<>();
+	private static final Integer LIST_SIZE = 1000;
+	private static final List<BufferedReader> readers = new ArrayList<>(LIST_SIZE);
 	
 	@Override
 	public List<String> getWelcomeMessage() {
@@ -26,8 +27,8 @@ public class WelcomeMessageServiceImpl implements WelcomeMessageService {
 		try {
 			BufferedReader reader = getReader();
 			String s;
-			List<String> message = new ArrayList<>();
-			while ((s = reader.readLine()) != null) {
+			List<String> message = new ArrayList<>(LIST_SIZE);
+			while (reader != null && (s = reader.readLine()) != null) {
 				message.add(s.intern());
 			}
 			message.add(getCurrentDate().intern());
@@ -47,6 +48,6 @@ public class WelcomeMessageServiceImpl implements WelcomeMessageService {
 	}
 	
 	private static String getCurrentDate() {
-		return "Today's Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy"));
+		return new String("Today's Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")));
 	}
 }

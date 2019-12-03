@@ -51,6 +51,9 @@ public class AppUser implements UserDetails {
 	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private UserInformation userInformation;
 
+	@OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Message> messages;
+
 	public AppUser() {
 	}
 
@@ -131,6 +134,18 @@ public class AppUser implements UserDetails {
 
 	public void setUserInformation(UserInformation userInformation) {
 		this.userInformation = userInformation;
+	}
+
+	public void setAuthorities(Set<ApplicationAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
 	}
 
 	@Override

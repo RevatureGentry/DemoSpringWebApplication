@@ -27,3 +27,8 @@
 *mvn*
 target/
 .attach*
+
+target/
+DemoSpringWebApp.iml
+src/main/resources/elastic-apm-agent-1.11.0.jar
+src/main/resources/elasticapm.properties

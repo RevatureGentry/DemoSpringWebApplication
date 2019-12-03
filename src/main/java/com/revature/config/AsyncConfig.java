@@ -28,7 +28,7 @@ public class AsyncConfig {
 		private CustomThreadFactory() {
 			SecurityManager s = System.getSecurityManager();
 			group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-			namePrefix = "cusotm-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-";
+			namePrefix = "custom-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-";
 		}
 
 		@Override
