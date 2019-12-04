@@ -46,7 +46,7 @@ public class RegistrationController {
 		}
 		if (service.attemptRegisterUser(form) != null) { 
 			model.addAttribute("registrationSuccessMessage", form.getUsername() + " successfully registered!");
-			return "/login";
+			return "login";
 		}
 		return "register";
 	}
